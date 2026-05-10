@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traveloop — End-to-End Travel Planning</title>
+    <meta name="description" content="Plan, budget, and organize your entire trip in one place.">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ========== NAVBAR ========== -->
+<nav class="navbar">
+    <div class="logo" onclick="App.navigate('home')">✦ Traveloop</div>
+    <div class="nav-links">
+        <button onclick="App.navigate('home')" id="nav-home">Home</button>
+        <button onclick="App.navigate('my-trips')" id="nav-my-trips">My Trips</button>
+        <button onclick="App.navigate('builder')" id="nav-builder">Itinerary</button>
+        <button onclick="App.navigate('budget')" id="nav-budget">Budget</button>
+        <button onclick="App.navigate('checklist')" id="nav-checklist">Checklist</button>
+        <button onclick="App.navigate('notes')" id="nav-notes">Notes</button>
+        <button onclick="App.navigate('profile')" id="nav-profile">Profile</button>
+    </div>
+    <div id="auth-corner" class="auth-corner">
+        <button class="btn btn-outline btn-sm" onclick="App.navigate('auth')">Sign In</button>
+    </div>
+</nav>
+
+<div class="container">
+
+    <!-- 1. AUTH (Login / Signup) -->
+    <section id="auth" class="view-section">
+        <div class="auth-container">
+            <div class="card card-glow" style="padding: 2.5rem;">
+                <h2 id="auth-title">Welcome back</h2>
+                <p class="subtitle" id="auth-subtitle">Sign in to continue your journeys</p>
+                <form id="auth-form">
+                    <div class="form-group" id="name-group" style="display:none;">
+                        <label>Full Name</label>
+                        <input type="text" name="name" placeholder="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" name="email" required placeholder="you@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" name="password" required placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%;padding:0.75rem;">Sign In</button>
+                    <p class="auth-toggle" id="auth-toggle-text" onclick="App.toggleAuthMode()">
+                        Don't have an account? <span>Sign up</span>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. HOME -->
+    <section id="home" class="view-section">
+        <div class="hero">
+            <h2 id="welcome-msg">Plan Your Next <span>Adventure</span> 🌍</h2>
+            <p>Build itineraries, track budgets, pack smart, and keep notes — all in one beautiful place.</p>
+            <button class="btn btn-primary" onclick="App.navigate('create-trip')" style="padding:0.75rem 2rem;">+ Plan New Trip</button>
+        </div>
+
+        <div class="section-header"><h2>Recent Trips</h2>
+            <button class="btn btn-outline btn-sm" onclick="App.navigate('my-trips')">View All</button>
+        </div>
+        <div id="dashboard-recent-list"></div>
+
+        <div class="section-header" style="margin-top:2.5rem;"><h2>🏙️ Popular Destinations</h2></div>
+        <div class="grid" id="popular-cities"></div>
+
+        <div class="section-header" style="margin-top:2.5rem;"><h2>💡 Quick Actions</h2></div>
+        <div class="quick-actions">
+            <div class="qa-card" onclick="App.navigate('create-trip')">✈️<br><strong>New Trip</strong></div>
+            <div class="qa-card" onclick="App.navigate('my-trips')">📋<br><strong>My Trips</strong></div>
+            <div class="qa-card" onclick="App.navigate('budget')">💰<br><strong>Budget</strong></div>
+            <div class="qa-card" onclick="App.navigate('checklist')">🎒<br><strong>Checklist</strong></div>
+            <div class="qa-card" onclick="App.navigate('notes')">📝<br><strong>Notes</strong></div>
+            <div class="qa-card" onclick="App.navigate('profile')">👤<br><strong>Profile</strong></div>
+        </div>
+    </section>
+
+    <!-- 3. CREATE TRIP -->
+    <section id="create-trip" class="view-section">
+        <div class="card card-glow" style="max-width:580px;margin:0 auto;padding:2rem;">
+            <h2 style="margin-bottom:0.25rem;">Start Your Journey ✈️</h2>
+            <p style="color:var(--text-muted);margin-bottom:1.5rem;font-size:0.9rem;">Fill in the details below.</p>
+            <form id="form-create-trip">
+                <div class="form-group"><label>Trip Name</label>
+                    <input name="name" placeholder="e.g. Summer in Europe" required></div>
+                <div class="flex gap-4">
+                    <div class="form-group" style="flex:1;"><label>Start Date</label>
+                        <input name="start" type="date" required></div>
+                    <div class="form-group" style="flex:1;"><label>End Date</label>
+                        <input name="end" type="date" required></div>
+                </div>
+                <div class="form-group"><label>Description</label>
+                    <textarea name="desc" rows="3" placeholder="What are you dreaming of?"></textarea></div>
+                <div style="text-align:right;">
+                    <button class="btn btn-ghost" type="button" onclick="App.navigate('home')" style="margin-right:0.5rem;">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Trip →</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- 4. MY TRIPS -->
+    <section id="my-trips" class="view-section">
+        <div class="section-header">
+            <h2>My Planned Trips</h2>
+            <button class="btn btn-primary btn-sm" onclick="App.navigate('create-trip')">+ New Trip</button>
+        </div>
+        <div class="grid" id="trip-list-grid"></div>
+    </section>
+
+    <!-- 5 & 6. ITINERARY BUILDER + VIEW -->
+    <section id="builder" class="view-section">
+        <div class="card card-glow">
+            <div class="section-header" style="margin-bottom:1rem;">
+                <h2>🗺️ Itinerary Builder</h2>
+                <div class="flex gap-2">
+                    <button class="btn btn-outline btn-sm view-toggle active" data-view="list" onclick="App.setItinView('list')">📋 List</button>
+                    <button class="btn btn-outline btn-sm view-toggle" data-view="day" onclick="App.setItinView('day')">📅 Day-wise</button>
+                    <button class="btn btn-outline btn-sm" onclick="App.showCitySearch()">+ Add City</button>
+                </div>
+            </div>
+            <div id="itinerary-timeline"></div>
+        </div>
+    </section>
+
+    <!-- 7. CITY SEARCH (rendered as modal by JS) -->
+
+    <!-- 9. BUDGET -->
+    <section id="budget" class="view-section">
+        <div class="card card-glow">
+            <h2 style="margin-bottom:1.5rem;">💰 Budget & Cost Analysis</h2>
+            <div id="budget-content"></div>
+        </div>
+    </section>
+
+    <!-- 10. CHECKLIST -->
+    <section id="checklist" class="view-section">
+        <div class="card card-glow" style="max-width:650px;margin:0 auto;">
+            <div class="section-header" style="margin-bottom:1rem;">
+                <h2>🎒 Packing Checklist</h2>
+                <button class="btn btn-outline btn-sm" onclick="App.resetChecklist()">↺ Reset All</button>
+            </div>
+            <div id="checklist-items"></div>
+        </div>
+    </section>
+
+    <!-- 11. SHARED/PUBLIC VIEW -->
+    <section id="shared" class="view-section">
+        <div id="shared-content" style="max-width:700px;margin:0 auto;"></div>
+    </section>
+
+    <!-- 12. PROFILE -->
+    <section id="profile" class="view-section">
+        <div class="card card-glow" style="max-width:550px;margin:0 auto;padding:2rem;">
+            <h2 style="margin-bottom:1.5rem;">👤 Profile & Settings</h2>
+            <div id="profile-content"></div>
+        </div>
+    </section>
+
+    <!-- 13. NOTES -->
+    <section id="notes" class="view-section">
+        <div class="card card-glow" style="max-width:700px;margin:0 auto;">
+            <h2 style="margin-bottom:0.25rem;">📝 Trip Notes & Journal</h2>
+            <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1.5rem;">Save important details and reminders.</p>
+            <div>
+                <textarea id="note-input" rows="4" placeholder="Hotel info, local contacts, daily logs..."></textarea>
+                <div style="text-align:right;margin-top:0.5rem;">
+                    <button class="btn btn-primary" onclick="App.addNote()">Save Note</button>
+                </div>
+            </div>
+            <div id="notes-list" style="margin-top:2rem;"></div>
+        </div>
+    </section>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
